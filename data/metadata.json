@@ -1,1 +1,55 @@
-
+{
+  "titulo": "Atlas Cartográfico do Império do Lando e Laucidônia",
+  "mapaAno": 2023,
+  "mapaLargura": 1536,
+  "mapaAltura": 1152,
+  "origem": {
+    "cidade": "Sefante",
+    "provincia": "Erena",
+    "x": 838,
+    "y": 637,
+    "latitudeLandesa": 0,
+    "longitudeLandesa": 0
+  },
+  "escala": {
+    "pixelsPorGrauLandes": 10,
+    "kmPorPixel": 4,
+    "kmPorGrauLandes": 40,
+    "status": "Escala cartográfica operacional configurável; não substitui uma georreferenciação oficial futura."
+  },
+  "pais": {
+    "nome": "Império do Lando e Laucidônia",
+    "continente": "Calisto",
+    "areaKm2": 12698697,
+    "populacaoAproximada": 740000000,
+    "formaDeGoverno": "Monarquia constitucional parlamentar imperial e federal",
+    "capitalHistoricaImperial": "Cidade do Lando",
+    "capitalGovernamental": "Guaratín"
+  },
+  "estados": [
+    {
+      "id": "lando",
+      "nome": "Império do Lando"
+    },
+    {
+      "id": "laucidonia",
+      "nome": "Império da Laucidônia"
+    },
+    {
+      "id": "dalmaci-naxo",
+      "nome": "Reino de Dalmaci e Naxo"
+    },
+    {
+      "id": "sarso",
+      "nome": "Reino de Sarso"
+    },
+    {
+      "id": "uniao",
+      "nome": "União Imperial"
+    },
+    {
+      "id": "ultramar",
+      "nome": "Províncias ultramarinas"
+    }
+  ]
+}
