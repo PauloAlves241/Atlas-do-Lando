@@ -1,1 +1,171 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#173f7a">
+  <meta name="description" content="Atlas interativo do Império do Lando e Laucidônia, com Sefante como marco zero das coordenadas landesas.">
+  <meta property="og:title" content="Atlas Cartográfico do Império do Lando e Laucidônia">
+  <meta property="og:description" content="Mapa interativo, províncias, capitais, coordenadas, rotas e estatísticas do Império.">
+  <meta property="og:image" content="assets/map/mapa-provincias-2023.jpg">
+  <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <title>Atlas do Império do Lando e Laucidônia</title>
+</head>
+<body>
+  <a class="skip-link" href="#mapViewport">Ir para o mapa</a>
+  <div id="app" class="app-shell" data-theme="dark">
+    <header class="topbar">
+      <button id="menuButton" class="icon-button mobile-only" type="button" aria-label="Abrir painel" aria-expanded="false">☰</button>
+      <div class="brand">
+        <img src="assets/icons/icon.svg" alt="" width="36" height="36">
+        <div>
+          <strong>Atlas Imperial</strong>
+          <span>Império do Lando e Laucidônia</span>
+        </div>
+      </div>
+      <div class="top-search-wrap">
+        <label class="sr-only" for="globalSearch">Pesquisar cidade ou província</label>
+        <input id="globalSearch" type="search" autocomplete="off" placeholder="Pesquisar cidade, província, estado ou atividade…">
+        <div id="searchSuggestions" class="search-suggestions" hidden></div>
+      </div>
+      <div class="top-actions">
+        <button id="homeButton" class="icon-button" type="button" title="Mostrar todo o mapa" aria-label="Mostrar todo o mapa">⌂</button>
+        <button id="themeButton" class="icon-button" type="button" title="Alternar tema" aria-label="Alternar tema">◐</button>
+        <button id="helpButton" class="icon-button" type="button" title="Ajuda e atalhos" aria-label="Ajuda e atalhos">?</button>
+      </div>
+    </header>
 
+    <aside id="sidebar" class="sidebar" aria-label="Painel do atlas">
+      <nav class="tabs" aria-label="Ferramentas do atlas">
+        <button class="tab is-active" data-tab="explorar" type="button">Explorar</button>
+        <button class="tab" data-tab="provincias" type="button">Províncias</button>
+        <button class="tab" data-tab="rota" type="button">Rota</button>
+        <button class="tab" data-tab="coordenadas" type="button">Coordenadas</button>
+      </nav>
+
+      <section class="tab-panel is-active" data-panel="explorar">
+        <div id="selectionEmpty" class="empty-state">
+          <div class="empty-icon">⌖</div>
+          <h2>Explore o Império</h2>
+          <p>Selecione uma capital no mapa, procure uma província ou clique em qualquer ponto para consultar suas coordenadas landesas.</p>
+          <button id="goSefanteButton" class="primary-button" type="button">Ir ao marco zero de Sefante</button>
+        </div>
+        <article id="placeDetails" class="place-details" hidden aria-live="polite"></article>
+        <div class="section-divider"></div>
+        <h3>Camadas</h3>
+        <label class="switch-row"><input id="toggleMarkers" type="checkbox" checked><span>Capitais provinciais</span></label>
+        <label class="switch-row"><input id="toggleLabels" type="checkbox" checked><span>Rótulos dos marcadores</span></label>
+        <label class="switch-row"><input id="toggleGrid" type="checkbox"><span>Grade de coordenadas landesas</span></label>
+        <label class="switch-row"><input id="toggleOriginLines" type="checkbox" checked><span>Eixos de Sefante</span></label>
+        <label class="switch-row"><input id="toggleMiniMap" type="checkbox" checked><span>Minimapa</span></label>
+        <div class="section-divider"></div>
+        <h3>Favoritos</h3>
+        <div id="favoritesList" class="compact-list"></div>
+      </section>
+
+      <section class="tab-panel" data-panel="provincias" hidden>
+        <div class="field-group">
+          <label for="stateFilter">Estado constituinte</label>
+          <select id="stateFilter"><option value="">Todos</option></select>
+        </div>
+        <div class="field-group">
+          <label for="regionFilter">Região</label>
+          <select id="regionFilter"><option value="">Todas</option></select>
+        </div>
+        <div class="field-group inline-fields">
+          <label><span>Ordenar por</span><select id="provinceSort"><option value="nome">Nome</option><option value="populacao">População</option><option value="area">Área</option><option value="idh">IDH</option></select></label>
+          <label><span>Sentido</span><select id="sortDirection"><option value="asc">Crescente</option><option value="desc">Decrescente</option></select></label>
+        </div>
+        <div id="provinceCount" class="result-count"></div>
+        <div id="provinceList" class="province-list"></div>
+      </section>
+
+      <section class="tab-panel" data-panel="rota" hidden>
+        <h2>Rota cartográfica</h2>
+        <p class="muted">Calcula uma ligação direta entre capitais no mapa-base, com estimativas comparativas por modal.</p>
+        <div class="field-group"><label for="routeFrom">Origem</label><select id="routeFrom"></select></div>
+        <button id="swapRouteButton" class="secondary-button full" type="button">Inverter origem e destino</button>
+        <div class="field-group"><label for="routeTo">Destino</label><select id="routeTo"></select></div>
+        <button id="calculateRouteButton" class="primary-button full" type="button">Calcular rota</button>
+        <div id="routeResult" class="route-result" aria-live="polite"></div>
+        <div class="section-divider"></div>
+        <h3>Medição livre</h3>
+        <p class="muted">Ative a ferramenta e escolha dois pontos do mapa.</p>
+        <button id="measureButton" class="secondary-button full" type="button">Iniciar medição</button>
+        <div id="measureResult" class="measure-result"></div>
+      </section>
+
+      <section class="tab-panel" data-panel="coordenadas" hidden>
+        <h2>Sistema de Sefante</h2>
+        <div class="origin-card">
+          <strong>Marco zero oficial do atlas</strong>
+          <span>Sefante, capital da província de Erena</span>
+          <code>0°00′00″ N/S · 0°00′00″ L/O</code>
+        </div>
+        <p class="muted">Neste atlas operacional, 10 pixels equivalem a 1 grau landês e cada pixel representa 4 km cartográficos.</p>
+        <div class="field-group inline-fields">
+          <label><span>Latitude landesa</span><input id="coordLat" type="number" step="0.0001" value="0"></label>
+          <label><span>Longitude landesa</span><input id="coordLon" type="number" step="0.0001" value="0"></label>
+        </div>
+        <button id="goCoordinateButton" class="primary-button full" type="button">Localizar coordenada</button>
+        <div class="section-divider"></div>
+        <h3>Ponto consultado</h3>
+        <div id="coordinateInspector" class="coordinate-inspector">Clique no mapa para consultar um ponto.</div>
+        <div class="section-divider"></div>
+        <h3>Marcadores pessoais</h3>
+        <p class="muted">Os pontos são guardados apenas neste navegador.</p>
+        <button id="customPointButton" class="secondary-button full" type="button">Adicionar ponto pelo mapa</button>
+        <div id="customPointsList" class="compact-list"></div>
+      </section>
+    </aside>
+
+    <main class="map-area">
+      <div id="mapViewport" class="map-viewport" tabindex="0" aria-label="Mapa interativo do Império do Lando e Laucidônia">
+        <div id="mapStage" class="map-stage">
+          <img id="mapImage" src="assets/map/mapa-provincias-2023.jpg" alt="Mapa das províncias do Império do Lando e Laucidônia em 2023" draggable="false">
+          <div id="gridLayer" class="grid-layer" hidden></div>
+          <div id="originAxes" class="origin-axes" aria-hidden="true">
+            <span class="axis axis-x"></span><span class="axis axis-y"></span>
+            <span class="origin-ring"></span>
+          </div>
+          <div id="markerLayer" class="marker-layer"></div>
+          <svg id="routeLayer" class="route-layer" viewBox="0 0 1536 1152" aria-hidden="true"></svg>
+          <div id="cursorPoint" class="cursor-point" hidden></div>
+        </div>
+        <div class="map-controls" aria-label="Controles do mapa">
+          <button id="zoomInButton" type="button" aria-label="Aproximar">+</button>
+          <button id="zoomOutButton" type="button" aria-label="Afastar">−</button>
+          <button id="fitButton" type="button" aria-label="Enquadrar mapa">⌗</button>
+        </div>
+        <div id="coordinateBar" class="coordinate-bar" aria-live="polite">Sefante: 0°00′00″ · 0°00′00″</div>
+        <div id="scaleBar" class="scale-bar"><span></span><b>0 km</b></div>
+        <div id="miniMap" class="mini-map" aria-label="Visão geral do mapa">
+          <img src="assets/map/mapa-provincias-2023.jpg" alt="">
+          <span id="miniViewport"></span>
+        </div>
+        <div id="mapStatus" class="map-status" role="status" aria-live="polite"></div>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="helpDialog" class="app-dialog">
+    <form method="dialog"><button class="dialog-close" aria-label="Fechar">×</button></form>
+    <h2>Ajuda e atalhos</h2>
+    <p>Arraste o mapa para navegar, use a roda do mouse ou os botões para ampliar, e toque em uma capital para abrir o atlas provincial.</p>
+    <dl class="shortcut-list">
+      <div><dt><kbd>/</kbd></dt><dd>Focar a pesquisa</dd></div>
+      <div><dt><kbd>+</kbd> <kbd>−</kbd></dt><dd>Alterar o zoom</dd></div>
+      <div><dt><kbd>0</kbd></dt><dd>Enquadrar o mapa inteiro</dd></div>
+      <div><dt><kbd>S</kbd></dt><dd>Ir a Sefante</dd></div>
+      <div><dt><kbd>Esc</kbd></dt><dd>Cancelar ferramenta ativa</dd></div>
+    </dl>
+    <h3>Sobre as coordenadas</h3>
+    <p>O marco zero está fixado em Sefante. Longitude positiva segue para leste, longitude negativa para oeste, latitude positiva para norte e latitude negativa para sul.</p>
+  </dialog>
+
+  <noscript>Este atlas precisa de JavaScript para carregar o mapa, os dados provinciais e as ferramentas de navegação.</noscript>
+  <script src="assets/js/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "Atlas do Império do Lando e Laucidônia",
+  "short_name": "Atlas do Lando",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0d1726",
+  "theme_color": "#173f7a",
+  "description": "Mapa interativo com Sefante como marco zero das coordenadas landesas.",
+  "icons": [
+    {
+      "src": "assets/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
